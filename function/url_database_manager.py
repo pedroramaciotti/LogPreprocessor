@@ -24,7 +24,7 @@ agent_headers = {
 
 def melty_article_API_request(melty_id,test=False):
     # The dictionary to append to the tables
-    data={'id':'', 'url':'', 'category':'','melty_page_type':'','article_API_consultation':'', 'page_scrap_consultation':'','melty_thema_name':''}
+    data={'id':'', 'url':'', 'category':'','melty_page_type':'','article_API_consultation':'', 'page_scrap_consultation':'','melty_thema_name':'','melty_folder_id':''}
     if test:
         return data;
     # The URL for the API request
@@ -40,6 +40,7 @@ def melty_article_API_request(melty_id,test=False):
     try:
         json_data = json.loads(requests.get(url).text)
         data['melty_thema_name']=json_data['thema']['name']
+        data['melty_folder_id']=str(json_data['folder']['id'])
         data['article_API_consultation']='AOK'
     except:
         data['article_API_consultation']='ERROR: response OK, JSON data not retrieved.'
@@ -75,7 +76,7 @@ def scrap_numeric_field(webp,field_name):
 
 def melty_nonarticle_scrap(url,test=False):
     # The dictionary to append to the tables
-    data={'id':'', 'url':'', 'category':'','melty_page_type':'','article_API_consultation':'', 'page_scrap_consultation':'','melty_thema_name':''}
+    data={'id':'', 'url':'', 'category':'','melty_page_type':'','article_API_consultation':'', 'page_scrap_consultation':'','melty_thema_name':'','melty_folder_id':''}
     if test:
         return data;
     try:
@@ -87,6 +88,7 @@ def melty_nonarticle_scrap(url,test=False):
     try:
         data['melty_page_type']=scrap_field(webp,'page_type')
         data['melty_thema_name']=scrap_field(webp,'thema_name')
+        data['melty_folder_id']=scrap_numeric_field(webp,'folder_id')
         data['page_scrap_consultation']='AOK'
     except:
         data['page_scrap_consultation']='ERROR: Unexpected format.'
@@ -258,11 +260,11 @@ def create_new_database(new_urls,test=False):
     ##################################
     # DIVIDE THE DB IN 3 PARTS
     mar=pd.DataFrame(columns=['id', 'url', 'category', 'topic', 'melty_page_type', 'article_API_consultation',
-                              'page_scrap_consultation', 'melty_thema_name'],dtype='object')
+                              'page_scrap_consultation', 'melty_thema_name','melty_folder_id'],dtype='object')
     mna=pd.DataFrame(columns=['id', 'url', 'category', 'topic', 'melty_page_type', 'article_API_consultation',
-                              'page_scrap_consultation', 'melty_thema_name'],dtype='object')
+                              'page_scrap_consultation', 'melty_thema_name','melty_folder_id'],dtype='object')
     ext=pd.DataFrame(columns=['id', 'url', 'category', 'topic', 'melty_page_type',' article_API_consultation',
-                              'page_scrap_consultation', 'melty_thema_name'],dtype='object')
+                              'page_scrap_consultation', 'melty_thema_name','melty_folder_id'],dtype='object')
 
     #############################################
     # RETRIEVING THE INFORMATION FOR THE NEW URLs
@@ -277,7 +279,7 @@ def create_new_database(new_urls,test=False):
     
     #############################################
     # SELECTING USEFUL ENTRIES
-    output_urls = output_urls[['id','url','category','topic']]
+    output_urls = output_urls[['id','url','category','topic','melty_folder_id']]
 
     return output_urls;
 

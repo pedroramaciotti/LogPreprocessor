@@ -98,7 +98,7 @@ output_log = managing.format_log(log_dataframe,urls)
 
 # Formatting output pages
 print("\n   * Formatting output pages...")
-output_pages = urls[['pageID','category','topic','external']]
+output_pages = urls[['pageID','category','topic','external','folderID']]
 
 # Some checks about pages
 print("\n   * Checking pages database...")
