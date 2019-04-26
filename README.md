@@ -20,14 +20,14 @@ Input files are CSV files. Each line corresponds to a request made to the server
 and the format is similar to NCSA log format, but with some changes. The fields
 of each line are:
 
-user ID
-timestamp
-timezone
-request Command (GET+URL+Protocol)
-response (Response sent from server)
-size (Size of the response)
-referrer (The page where the resquest originated)
-agent (Software used to make the request and other client-side information)
+user ID  
+timestamp  
+timezone  
+request Command (GET+URL+Protocol)  
+response (Response sent from server)  
+size (Size of the response)  
+referrer (The page where the resquest originated)  
+agent (Software used to make the request and other client-side information)  
 
 
 Log Preprocessor (log_preprocessor.py)
@@ -42,20 +42,20 @@ keywords in agent field present in file robot_agent_stringmatch.txt) and request
 made by users with suspicious unhuman behavior. The output file is a CSV file
 where each line is a request, whose fields are:
 
-userID
-timestamp
-requested_pageID
-referrer_pageID
-device (Phone, Computer, Tablet or Other)
+userID  
+timestamp  
+requested_pageID  
+referrer_pageID  
+device (Phone, Computer, Tablet or Other)  
 
 The program also returns a CSV file contaning all the pages that appear in the
 preprocessed log (be it as requested or referrer). Each line is a page; whose fields are:
 
-pageID
-category (topic page, quiz...)
-topic (Series, Movies...)
-external (from Melty or not)
-folderID
+pageID  
+category (topic page, quiz...)  
+topic (Series, Movies...)  
+external (from Melty or not)  
+folderID  
 
 
 To Do (beware of):
