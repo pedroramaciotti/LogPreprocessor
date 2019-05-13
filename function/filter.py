@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 import numpy as np
 import pandas as pd
 import time as timelib
@@ -27,6 +26,7 @@ def declared_bot_filter(log_dataframe):
 
 
     log_dataframe['declared_robot']=pd.Series(np.full(log_dataframe.shape[0],False,dtype=bool)).values
+#    start = timelib.time()
     loop_keeper = 0
     total_loops = log_dataframe.shape[0]
     loop_tick = np.floor(0.01*total_loops)
@@ -54,6 +54,7 @@ def suspicious_activity_filter(log_dataframe):
     print("     Considering requests made by users with suspicious activity...")
 
     log_dataframe['absolute_hour'] = log_dataframe['timestamp'].apply(lambda x: x.day*24 + x.hour).values
+#    log_dataframe['minute'] = log_dataframe['timestamp'].apply(lambda x: x.minute).values
     log_dataframe['absolute_minute'] = log_dataframe['timestamp'].apply(lambda x: x.day*24*60 + 60*x.hour + x.minute).values
     log_dataframe['requests'] = pd.Series(np.ones(log_dataframe.shape[0],dtype=int)).values
 

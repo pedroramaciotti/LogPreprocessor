@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Created on Fri Apr 12 15:32:20 2019
 
+@author: alexandre
+"""
 monthdict={'Jan': 1,'Feb': 2,'Mar': 3,'Apr': 4,'May': 5,'Jun': 6,'Jul': 7,'Aug': 8,'Sep': 9,'Oct': 10,'Nov': 11,'Dic': 12}
 
 import pandas as pd
@@ -21,30 +25,27 @@ def date_time(timestamp):
 
 
 phone = ['iPod','iPhone','Android','Windows Phone']
-tablet = ['iPad','Tablet']
-computer = ['Windows','Linux','Macintosh'] 
+computer = ['Windows','Linux','Macintosh']
 
 def device(log_dataframe):
     start = timelib.time()
     log_dataframe['device'] = str()
     for row in log_dataframe.itertuples():
         if row.agent != row.agent:
+            log_dataframe['device'].at[row.Index] = 'Other'
             continue
         if any(substring in row.agent for substring in phone):
             log_dataframe['device'].at[row.Index] = 'Phone'
             continue
-        elif any(substring in row.agent for substring in tablet):
-            log_dataframe['device'].at[row.Index] = 'Tablet'
-            continue
         elif any(substring in row.agent for substring in computer):
             log_dataframe['device'].at[row.Index] = 'Computer'
         else:
-            log_dataframe['device'].at[row.Index] = 'Other'    
+            log_dataframe['device'].at[row.Index] = 'Other'
     print("     %d of %d requests inspected (%.2f%%) in %.0f seconds."%(log_dataframe.shape[0], log_dataframe.shape[0], 100.0, timelib.time() - start))
     return log_dataframe;
 
 
-            
+
 def amp_project(log_dataframe):
     log_dataframe['requested_url']=log_dataframe['requested_url'].astype(str)
     log_dataframe['referrer_url']=log_dataframe['referrer_url'].astype(str)
@@ -90,7 +91,7 @@ def amp_project(log_dataframe):
                 log_dataframe['referrer_url'].at[row.Index] = "http://www.melty.fr/"+splitted[7].split("?")[0]
                 amp_project_pages_counter+=1
                 continue
-        
+
     print("	%d of %d requests inspected (%.2f%%) in %.0f seconds."%(total_loops, total_loops,100.0,timelib.time()-start_type_retrieval), end='\r')
     print("\n     %d requests containing AMP Project's URLs parsed into www.melty.fr addresses."%amp_project_pages_counter)
     log_dataframe['requested_url']=log_dataframe['requested_url'].apply(lambda x: '/'.join(x.split('/amp/')) if x.find('/amp/')>0 else x)

@@ -66,21 +66,29 @@ def format_pages(urls):
     start = timelib.time()
     urls['pageID']=str()
     urls['external']=str()
-    urls['folderID']=str()
     for i, row in enumerate(urls.itertuples()):
-        # Anonymise requests
+        # Anonymise urls
         urls['pageID'].at[row.Index] = 'PAGE'+str(i)
-        # Check if the requests are from Melty
+        # Check if requests are from Melty
         if urls['id'].at[row.Index][0] == 'M' :
             urls['external'].at[row.Index] = 'False'
         else : urls['external'].at[row.Index] ='True'
-    # Anonymise folders
-    folder = list()
-    for i in range(len(urls.melty_folder_id.unique())):
-        folder.append('FLDR'+str(i))
-    urls['folderID'] = urls.melty_folder_id.map(pd.Series(data=folder,index=urls.melty_folder_id.unique()))
+    # TO AVOID NAN VALUES WHEN INFO IS MISSING LATER IN ANALYSIS :
+    # FOLDER->0; MELTY_PAGE_TYPE->other; MELTY_THEMA_NAME->Other
+    for row in urls.itertuples():
+        if  row.melty_folder_id =='':
+            urls['melty_folder_id'].at[row.Index] = 0
+        if row.melty_page_type=='':
+            urls['melty_page_type'].at[row.Index] = 'other'
+        if row.melty_thema_name=='':
+            urls['melty_thema_name'].at[row.Index] = 'Other'
+        if  row.melty_folder_id =='null': # if this is not a folder
+            urls['melty_folder_id'].at[row.Index] = 0
+        if row.melty_thema_name=='null': # if this is not a folder
+            urls['melty_thema_name'].at[row.Index] = 'Other'
     print("     URLs formatted in %0.2f seconds."%(timelib.time()-start))
     return urls;
+
 
 def format_log(log_dataframe, urls):
     start = timelib.time()
@@ -90,7 +98,8 @@ def format_log(log_dataframe, urls):
     for i in range(len(log_dataframe.user.unique())):
         user.append('USR'+str(i))
     log_dataframe['userID'] = log_dataframe.user.map(pd.Series(data=user,index=log_dataframe.user.unique()))
-    # Identity urls with pageID to anonymise
+
+    # Identity url with pageID to anonymise
     log_dataframe['requested_pageID'] = 'Unknown'
     log_dataframe['referrer_pageID'] = 'Unknown'
     log_dataframe['requested_pageID'] = log_dataframe.requested_url.map(pd.Series(index = urls.url.values, data = urls.pageID.values))

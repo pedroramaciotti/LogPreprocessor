@@ -39,6 +39,7 @@ def melty_article_API_request(melty_id,test=False):
         return data;
     try:
         json_data = json.loads(requests.get(url).text)
+        data['melty_page_type']='article'
         data['melty_thema_name']=json_data['thema']['name']
         data['melty_folder_id']=str(json_data['folder']['id'])
         data['article_API_consultation']='AOK'
@@ -116,7 +117,7 @@ def mna_page_type_classificator(category):
     if category=='thema':
         return 'topic page';
     if category in ['search', 'search-page']:
-        return 'search page';
+        return 'search';
     if category in ['video', 'live','quiz','article']:
         return category;
     if category=='videos':
@@ -131,18 +132,18 @@ def ext_url_classificator(url):
                        'www.mcm.fr','www.june.fr','www.tyramisu.fr')):
         return 'sister site';
     elif any([search_word in url for search_word in ['search','google','bing','ecosia','yahoo']]):
-        return 'search page';
+        return 'search';
     elif any([social_word in url for social_word in ['facebook','twitter','pinterest','fb','tumblr','reddit','instagram','youtube']]):
         return 'social';
     else:
         return 'other';
-    
+
 def thema_mapper(thema):
     if thema in ['Télé','Emissions','Télévision']:
         return 'TV';
     if thema in ['Séries','Series','Ciné & Séries','Séries\\/Télé US','Séries / TV',
                  'Séries/Télé US','Séries \\/ TV','Série\\/Télé US','Série/Télé US']:
-        return 'Series';        
+        return 'Series';
     if thema in ['Célébrités','Stars & style','People','Social News','Celebs','Sociétés','C\\él\\ébrit\\és\\']:
         return 'Celebrities';
     if thema in ['Musique',]:
@@ -272,14 +273,13 @@ def create_new_database(new_urls,test=False):
     output_urls=pd.concat([new_mar,new_mna,new_ext],axis=0)
     output_urls.fillna('',inplace=True)
     output_urls.reset_index(inplace=True,drop=True)
-    
+
     #############################################
-    # TRANSLATING AND FORMATTING FRENCH THEMA 
+    # TRANSLATING AND FORMATTING FRENCH THEMA
     output_urls['topic'] = output_urls.melty_thema_name.apply(lambda x: thema_mapper(x))
-    
+
     #############################################
     # SELECTING USEFUL ENTRIES
-    output_urls = output_urls[['id','url','category','topic','melty_folder_id']]
+    output_urls = output_urls[['id','url','category','topic','melty_folder_id','melty_page_type','melty_thema_name']]
 
     return output_urls;
-

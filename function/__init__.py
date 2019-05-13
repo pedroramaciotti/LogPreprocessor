@@ -29,4 +29,3 @@ from .url_database_manager import ext_url_classificator
 from .url_database_manager import thema_mapper
 from .url_database_manager import tables_updater
 from .url_database_manager import create_new_database
-

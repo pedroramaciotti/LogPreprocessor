@@ -37,3 +37,12 @@ def pages_database(log_dataframe, output_pages):
     print("     Referrer pages from log not in pages database: %d"%log_referrer_pages_notin_urldata)
     print("     Pages checked in %0.2f seconds."%(timelib.time()-start))
     return;
+    
+    
+    
+    
+    
+    
+    
+    
+
